@@ -40,7 +40,7 @@ export function Hero() {
       {/* -------------------------------------------------------- foreground */}
       <div className="container-page relative grid w-full items-end gap-12 py-16 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-10 lg:py-20">
         <div className="animate-rise min-w-0 max-w-2xl">
-          <h1 className="font-display text-[clamp(2.5rem,5.2vw,4.25rem)] font-extrabold leading-[1.1] text-white">
+          <h1 className="font-display text-[clamp(2.5rem,5.2vw,4.25rem)] font-semibold leading-[1.1] text-white">
             AI-First B.Tech in{" "}
             <span className="text-accent">Computer Science</span>
           </h1>

@@ -156,7 +156,7 @@ export function EcosystemCards() {
         {CARDS.map((c) => (
           <li
             key={c.name}
-            className="absolute flex items-center justify-center"
+            className="group absolute flex items-center justify-center hover:z-20"
             style={{
               left: cq(c.ml),
               top: cq(c.mt),
@@ -164,12 +164,14 @@ export function EcosystemCards() {
               height: cq(c.bh),
             }}
           >
+            {/* translateY sits left of rotate so the card lifts straight up in
+                the group's space rather than along its own tilted axis. */}
             <div
-              className="flex-none transition-transform duration-300 ease-out hover:scale-[1.04]"
-              style={{ transform: `rotate(${c.rotate}deg)` }}
+              className="flex-none transition-transform duration-300 ease-out [transform:translateY(var(--lift,0px))_rotate(var(--rot))_scale(var(--sc,1))] group-hover:[--lift:-13px] group-hover:[--sc:1.045]"
+              style={{ ["--rot" as string]: `${c.rotate}deg` }}
             >
               <div
-                className="relative overflow-clip border-solid border-black bg-white"
+                className="relative overflow-clip border-solid border-black bg-white transition-shadow duration-300 group-hover:shadow-[0_14px_26px_-10px_rgba(11,13,18,0.32)]"
                 style={{
                   width: cq(c.cw),
                   height: cq(c.ch),

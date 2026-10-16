@@ -50,8 +50,8 @@
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-display);
+  --font-sans: var(--font-montserrat);
+  --font-display: var(--font-montserrat);
 }
 
 /* Base styles live in @layer base so Tailwind utilities (text-white, text-ink,
@@ -64,14 +64,12 @@
   body {
     background: var(--canvas);
     color: var(--ink-body);
-    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   /* No `color` here on purpose: headings set their own via a utility
      (text-ink, text-white …) so they work on light and on video/dark. */
   h1, h2, h3, h4 {
-    font-family: var(--font-display), var(--font-inter), ui-sans-serif, sans-serif;
     letter-spacing: -0.025em;
     text-wrap: balance;
   }
@@ -80,6 +78,13 @@
     background: var(--accent);
     color: #fff;
   }
+}
+
+/* Typeface is set unlayered on purpose: rules inside `@layer base` do not
+   apply in this Tailwind v4 + turbopack setup (the same reason heading colours
+   had to move out of it), so the font would silently fall back to system-ui. */
+html {
+  font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Reusable primitives ---------------------------------------- */
