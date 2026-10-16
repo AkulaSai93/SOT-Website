@@ -7,13 +7,10 @@
  *                 "EXAM TIME: Scheduled after you call admissions".
  *                 There is no fixed exam date published, so this cell states
  *                 the real scheduling model rather than a made-up date.
- *  - Eligibility: sot.upgrad.com/admission — "Minimum 50% in PCM in Class 12",
- *                 "Below 20 years of age before July 2026"
  */
 const FACTS = [
   { label: "Course duration", value: "4 Years", note: "8 semesters" },
   { label: "uGNET exam", value: "Scheduled on call", note: "Online test" },
-  { label: "Eligibility", value: "50% in PCM", note: "Under 20 by Jul 2026" },
 ] as const;
 
 export function HeroFacts({ className = "" }: { className?: string }) {
