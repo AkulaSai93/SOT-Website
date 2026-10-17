@@ -149,8 +149,23 @@ html {
   animation: border-spin 4s linear infinite;
 }
 
+/* On-enter reveal for scroll-revealed cards (see Specializations). Cards start
+   lowered and transparent; the observer adds .is-in once they scroll into view. */
+.reveal-card {
+  opacity: 0;
+  transform: translateY(48px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-card.is-in {
+  opacity: 1;
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-rise { animation: none; }
+  .reveal-card { opacity: 1; transform: none; transition: none; }
   .cta-glow { animation: none; }
   .marquee-track { animation: none; }
   html { scroll-behavior: auto; }
