@@ -16,7 +16,7 @@
 
   /* Brand */
   --accent: #e4002b;        /* upGrad red */
-  --topbar: #0075ff;        /* announcement strip */
+  --topbar: var(--accent); /* announcement strip — brand red */
   --accent-hover: #c40025;
   --accent-soft: #fff1f3;   /* tinted background */
 
