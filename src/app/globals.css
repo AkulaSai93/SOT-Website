@@ -5,7 +5,7 @@
    ============================================================ */
 :root {
   /* Surfaces */
-  --canvas: #fbfbf9;        /* page background, warm off-white */
+  --canvas: #ffffff;        /* page background, pure white */
   --surface: #ffffff;       /* cards */
   --surface-sunken: #f4f4f1;/* subtle fills, chips */
 

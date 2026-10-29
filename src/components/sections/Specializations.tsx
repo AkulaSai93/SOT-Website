@@ -173,14 +173,14 @@ export function Specializations() {
   }, []);
 
   return (
-    <section id="specializations" className="relative bg-canvas py-20 lg:py-28">
+    <section id="specializations" className="relative bg-white py-20 lg:py-28">
       <div ref={sectionRef} className="container-page relative">
         {/* Sticky heading, sitting behind the cards so they travel over it */}
         <header
           ref={headerRef}
           className="pointer-events-none top-[120px] z-0 mx-auto max-w-[934px] text-center lg:sticky"
         >
-          <h2 className="text-[32px] font-semibold leading-tight text-ink sm:text-[36px] lg:text-[40px]">
+          <h2 className="font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-ink">
             New-Gen Engineering{" "}
             <span className="text-[#e7000b]">Specializations</span>
           </h2>

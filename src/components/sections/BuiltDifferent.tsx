@@ -77,7 +77,7 @@ export function BuiltDifferent() {
         <header className="mx-auto max-w-[609px] text-center text-ink">
           <h2
             id="built-different-heading"
-            className="text-[32px] font-semibold leading-normal sm:text-[36px] lg:text-[40px]"
+            className="font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.33] tracking-[-0.4px]"
           >
             How{" "}
             <span style={{ color: PRIMARY }}>We&rsquo;re Built Different</span>

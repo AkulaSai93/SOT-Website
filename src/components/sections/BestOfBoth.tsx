@@ -294,10 +294,10 @@ export function BestOfBoth() {
     // Two lines rather than one, so the converged block is far narrower and
     // the type can be much larger: 5.2vw still clears a 48px gutter at 1024,
     // 1280 and 1440.
-    "font-display text-[clamp(1.5rem,5.2vw,4.5rem)] font-semibold leading-[1.1] tracking-[-0.02em] text-ink whitespace-nowrap";
+    "font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-ink whitespace-nowrap";
 
   return (
-    <section id="best-of-both" className="bg-canvas">
+    <section id="best-of-both" className="bg-white">
       {animated ? (
         <div ref={trackRef} className="relative" style={{ height: "260vh" }}>
           <div
@@ -313,7 +313,7 @@ export function BestOfBoth() {
               className="absolute left-1/2 top-1/2 grid w-full grid-cols-[1fr_auto_1fr] items-center"
               style={{
                 transform:
-                  "translate(-50%, calc(-50% - var(--lift) * (41vh - 79px)))",
+                  "translate(-50%, calc(-50% - var(--lift) * (41vh - 59px)))",
               }}
             >
               <span className="sr-only">
@@ -332,10 +332,19 @@ export function BestOfBoth() {
               <span
                 aria-hidden
                 className={`${headingClass} flex min-w-0 flex-col items-end text-right`}
+                style={{ opacity: "clamp(0, (var(--a) - 0.05) * 6, 1)" }}
               >
-                {HEAD_LEFT.map((line) => (
+                {HEAD_LEFT.map((line, i) => (
                   <span key={line} className="block">
-                    {line}
+                    {i === 1 ? (
+                      <>
+                        Meets{" "}
+                        <span className="text-[#e6161f]">Silicon</span>
+                        {"\u00a0"}
+                      </>
+                    ) : (
+                      line
+                    )}
                   </span>
                 ))}
               </span>
@@ -354,7 +363,7 @@ export function BestOfBoth() {
                   marginInline: "calc((1 - var(--a)) * 12px)",
                 }}
               >
-                <span className="absolute left-0 top-1/2 block w-full -translate-y-1/2 overflow-hidden rounded-2xl bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)] [height:min(68vh,620px)]">
+                <span className="absolute left-0 top-1/2 block w-full -translate-y-1/2 overflow-hidden rounded-lg bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)] [height:min(68vh,620px)]">
                   <video
                     autoPlay
                     muted
@@ -369,9 +378,13 @@ export function BestOfBoth() {
                 </span>
               </span>
 
-              <span aria-hidden className={`${headingClass} flex min-w-0 flex-col items-start text-left`}>
-                {HEAD_RIGHT.map((line) => (
-                  <span key={line} className="block">
+              <span aria-hidden className={`${headingClass} flex min-w-0 flex-col items-start text-left`}
+                style={{ opacity: "clamp(0, (var(--a) - 0.05) * 6, 1)" }}>
+                {HEAD_RIGHT.map((line, i) => (
+                  <span
+                    key={line}
+                    className={`block ${i === 1 ? "text-[#e6161f]" : ""}`}
+                  >
                     {line}
                   </span>
                 ))}
@@ -419,10 +432,12 @@ export function BestOfBoth() {
         </div>
       ) : (
         <div className="container-page pt-20 lg:pt-28">
-          <h2 className="mx-auto max-w-3xl text-center font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.2] text-ink">
+          <h2 className="mx-auto max-w-3xl text-center font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-ink">
             {HEAD_LEFT[0]}
-            {HEAD_RIGHT[0]} {HEAD_LEFT[1]}
-            {HEAD_RIGHT[1]}
+            {HEAD_RIGHT[0]} Meets{" "}
+            <span className="text-[#e6161f]">
+              Silicon {HEAD_RIGHT[1]}
+            </span>
           </h2>
         </div>
       )}
