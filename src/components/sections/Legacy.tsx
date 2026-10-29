@@ -35,8 +35,8 @@ export function Legacy() {
             </span>
           </h2>
 
-          {/* One line at every width: 24px down to ~1090px, then viewport-scaled. */}
-          <p className="whitespace-nowrap font-display text-[min(1.5rem,2.2vw)] font-normal leading-[1.5] text-[#3d4452]">
+          {/* One line at every width: 17px down to ~1090px, then viewport-scaled. */}
+          <p className="whitespace-nowrap font-display text-[min(1.0625rem,1.55vw)] font-normal leading-[1.6] text-muted">
             A legacy of 10+ years in higher education, driving learning, hiring,
             and career success
           </p>
@@ -44,20 +44,20 @@ export function Legacy() {
 
         <EcosystemCards />
 
-        <dl className="grid w-full grid-cols-2 gap-y-10 sm:grid-cols-3 md:grid-cols-4 xl:w-[1232px] xl:grid-cols-7 xl:gap-y-0">
+        {/* Below xl this is a wrapping grid. At xl it becomes a flex row so
+            each column sizes to its own label instead of being locked to an
+            equal 176px — at equal widths "Corporate clients trained annually"
+            would need to drop to 8.5px to stay on one line. */}
+        <dl className="grid w-full grid-cols-2 gap-y-10 sm:grid-cols-3 md:grid-cols-4 xl:flex xl:w-[1232px] xl:items-start xl:justify-between xl:gap-y-0">
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="flex flex-col items-center gap-5 px-4 text-center"
+              className="flex flex-col items-center gap-5 px-4 text-center xl:px-2"
             >
               <dd className="m-0 font-display text-[clamp(2rem,3vw,2.5rem)] font-semibold leading-none text-[#e6161f]">
                 {stat.value}
               </dd>
-              <dt
-                className={`font-display text-[16px] font-normal leading-6 text-[#3d4452] ${
-                  stat.narrow ? "max-w-[144px]" : ""
-                }`}
-              >
+              <dt className="font-display text-[15px] font-normal leading-6 text-[#3d4452] xl:whitespace-nowrap">
                 {stat.label}
               </dt>
             </div>

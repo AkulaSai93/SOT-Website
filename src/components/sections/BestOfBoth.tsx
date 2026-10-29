@@ -1,16 +1,48 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * "Where World-Class University Meets Silicon Valley Learning"
  *
- * Copy, icons and the centre illustration all come from sot.upgrad.com — the
- * two five-item columns are that section's own "UNIVERSITY ADVANTAGE" and
- * "SILICON VALLEY STYLE LEARNING" lists, verbatim.
+ * Motion is modelled on the courso.framer.website section: a tall track holds a
+ * `position: sticky` stage; the headline is split into two halves that start
+ * off-screen left and right and slide inward, while the media between them
+ * narrows to nothing — so the two halves close into a single line. The ten
+ * feature cards then reveal below.
  *
- * Presented in the two-card comparison style: a white card and a red card with
- * oversized ghost wordmarks, hairline-separated rows, and the student
- * illustration straddling the gap between them.
+ * Progress is one rAF-throttled handler writing two CSS custom properties:
+ *   --a      headline converge + media narrow
+ *   --lift   headline travels to the top of the frame
+ *   --cards  panels fade up underneath it
+ * They run in sequence, not together: the panels must not appear while the
+ * heading is still moving, or the two overlap mid-flight.
+ *
+ * Below lg, and for prefers-reduced-motion, the pinning is skipped entirely and
+ * the section renders as a plain heading + card grid: a pinned stage that eats
+ * scroll is hostile on a phone.
+ *
+ * CENTRE VIDEO: currently the hero footage (CloudFront, webm + mp4). The
+ * section's own clip is on disk at public/videos/best-of-both.mp4. The slot
+ * keeps a brand-tinted panel behind the video so there is never a black flash
+ * before the first frame decodes.
+ *
+ * Sizing follows the reference, whose stage is 900x570 in a 1440 viewport —
+ * about 62% of the width and 63% of the height.
  */
+/** Hero footage, reused here for now. The file supplied for this section is
+ *  kept at public/videos/best-of-both.mp4 and can be swapped back in by
+ *  pointing VIDEO_BASE's <source> list at it. */
+const HERO_VIDEO =
+  "https://dd848r0fq5a5i.cloudfront.net/asset-optimization/video/landing_herosection_video/landing_herosection_video";
+
+/* The heading is two lines sliced vertically down the middle: the left block
+   holds the start of both lines, the right block the end. Converged they read
+   "Where World-Class University" / "Meets Silicon Valley Learning". */
+const HEAD_LEFT = ["Where World-", "Meets Silicon\u00a0"];
+const HEAD_RIGHT = ["Class University", "Valley Learning"];
+
 type Item = { title: string; body: string; icon: string };
 
 const UNIVERSITY: Item[] = [
@@ -69,13 +101,16 @@ const SILICON: Item[] = [
   },
 ];
 
+const clamp = (v: number, lo: number, hi: number) =>
+  Math.min(hi, Math.max(lo, v));
+
 function Rows({ items, dark }: { items: Item[]; dark: boolean }) {
   return (
-    <ul className="relative mt-6 flex flex-1 flex-col">
+    <ul className="relative mt-4 flex flex-1 flex-col">
       {items.map((item, i) => (
         <li
           key={item.title}
-          className={`flex flex-1 items-start gap-4 py-4 ${
+          className={`flex flex-1 items-start gap-3 py-2.5 ${
             i > 0
               ? dark
                 ? "border-t border-white/15"
@@ -84,7 +119,7 @@ function Rows({ items, dark }: { items: Item[]; dark: boolean }) {
           }`}
         >
           <span
-            className={`grid size-10 shrink-0 place-items-center rounded-xl ${
+            className={`grid size-9 shrink-0 place-items-center rounded-lg ${
               dark ? "bg-white/15" : "bg-sunken"
             }`}
           >
@@ -93,19 +128,19 @@ function Rows({ items, dark }: { items: Item[]; dark: boolean }) {
               alt=""
               width={24}
               height={24}
-              className={`size-6 object-contain ${dark ? "brightness-0 invert" : ""}`}
+              className={`size-5 object-contain ${dark ? "brightness-0 invert" : ""}`}
             />
           </span>
           <div className="min-w-0">
-            <h3
-              className={`font-display text-[15.5px] font-semibold leading-snug ${
+            <h4
+              className={`font-display text-[14px] font-semibold leading-snug ${
                 dark ? "text-white" : "text-ink"
               }`}
             >
               {item.title}
-            </h3>
+            </h4>
             <p
-              className={`mt-1 text-[13.5px] leading-snug ${
+              className={`mt-0.5 text-[12.5px] leading-snug ${
                 dark ? "text-white/85" : "text-body"
               }`}
             >
@@ -118,7 +153,7 @@ function Rows({ items, dark }: { items: Item[]; dark: boolean }) {
   );
 }
 
-function Card({
+function Panel({
   watermark,
   title,
   tagline,
@@ -133,16 +168,16 @@ function Card({
 }) {
   return (
     <div
-      className={`relative flex h-full flex-col overflow-hidden rounded-[28px] p-6 lg:p-7 ${
+      className={`relative flex h-full flex-col overflow-hidden rounded-[24px] p-5 lg:p-6 ${
         dark
           ? "bg-accent"
           : "border border-line bg-surface shadow-[var(--shadow-md)]"
       }`}
     >
-      {/* oversized ghost wordmark, clipped by the card */}
+      {/* oversized ghost wordmark, clipped by the panel */}
       <span
         aria-hidden
-        className={`pointer-events-none absolute -top-4 left-6 select-none font-display text-[72px] font-extrabold leading-none tracking-tight lg:text-[84px] ${
+        className={`pointer-events-none absolute -top-4 left-6 select-none font-display text-[58px] font-extrabold leading-none tracking-tight lg:text-[66px] ${
           dark ? "text-white/15" : "text-ink/[0.055]"
         }`}
       >
@@ -151,7 +186,7 @@ function Card({
 
       <div className="relative flex flex-1 flex-col">
         <h3
-          className={`font-display text-[19px] font-bold uppercase tracking-tight lg:text-[21px] ${
+          className={`font-display text-[16px] font-bold uppercase tracking-tight lg:text-[18px] ${
             dark ? "text-white" : "text-ink"
           }`}
         >
@@ -159,12 +194,12 @@ function Card({
         </h3>
         <span
           aria-hidden
-          className={`mt-3 block h-[3px] w-14 rounded-full ${
+          className={`mt-2 block h-[3px] w-12 rounded-full ${
             dark ? "bg-white" : "bg-accent"
           }`}
         />
         <p
-          className={`mt-3 text-[14px] ${dark ? "text-white/85" : "text-body"}`}
+          className={`mt-2 text-[13px] ${dark ? "text-white/85" : "text-body"}`}
         >
           {tagline}
         </p>
@@ -176,50 +211,221 @@ function Card({
 }
 
 export function BestOfBoth() {
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const [animated, setAnimated] = useState(false);
+
+  // decide once whether the pinned treatment applies
+  useEffect(() => {
+    const lg = window.matchMedia("(min-width: 1024px)");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const decide = () => setAnimated(lg.matches && !reduce.matches);
+    decide();
+    lg.addEventListener("change", decide);
+    reduce.addEventListener("change", decide);
+    return () => {
+      lg.removeEventListener("change", decide);
+      reduce.removeEventListener("change", decide);
+    };
+  }, []);
+
+  // scroll -> --a (converge) and --b (reveal)
+  useEffect(() => {
+    if (!animated) return;
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const track = trackRef.current;
+      const stage = stageRef.current;
+      if (!track || !stage) return;
+
+      const r = track.getBoundingClientRect();
+      const travel = r.height - window.innerHeight;
+      const p = travel > 0 ? clamp(-r.top / travel, 0, 1) : 0;
+
+      // Three phases, strictly in order, so nothing overlaps:
+      //   --a     0.00 -> 0.55  video narrows, headline halves close
+      //   --lift  0.55 -> 0.74  headline travels to the top of the frame
+      //   --cards 0.78 -> 0.95  panels fade up underneath it
+      stage.style.setProperty("--a", String(clamp(p / 0.55, 0, 1)));
+      stage.style.setProperty("--lift", String(clamp((p - 0.55) / 0.19, 0, 1)));
+      stage.style.setProperty(
+        "--cards",
+        String(clamp((p - 0.78) / 0.17, 0, 1)),
+      );
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [animated]);
+
+  // Autoplay alone wasn't starting this video (loaded, readyState 4, but left
+  // paused), which shows as an empty gradient panel. Start it explicitly once
+  // the pinned stage exists, and again whenever it scrolls into view.
+  useEffect(() => {
+    if (!animated) return;
+    const video = stageRef.current?.querySelector("video");
+    if (!video) return;
+    const play = () => {
+      video.muted = true;
+      void video.play().catch(() => {});
+    };
+    play();
+    const io = new IntersectionObserver(
+      (entries) => entries.some((e) => e.isIntersecting) && play(),
+      { threshold: 0.1 },
+    );
+    io.observe(video);
+    return () => io.disconnect();
+  }, [animated]);
+
+  const headingClass =
+    // Two lines rather than one, so the converged block is far narrower and
+    // the type can be much larger: 5.2vw still clears a 48px gutter at 1024,
+    // 1280 and 1440.
+    "font-display text-[clamp(1.5rem,5.2vw,4.5rem)] font-semibold leading-[1.1] tracking-[-0.02em] text-ink whitespace-nowrap";
+
   return (
-    <section id="best-of-both" className="bg-canvas py-20 lg:py-28">
-      <div className="container-page">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.2] tracking-[-0.4px] text-ink">
-            Where World-Class University Meets Silicon Valley Learning
-          </h2>
-          <p className="mt-5 text-[16.5px] leading-relaxed text-body">
-            Get the credibility of a university degree with the hands-on
-            learning approach of leading technology companies.
-          </p>
-        </div>
+    <section id="best-of-both" className="bg-canvas">
+      {animated ? (
+        <div ref={trackRef} className="relative" style={{ height: "260vh" }}>
+          <div
+            ref={stageRef}
+            className="sticky top-0 h-screen overflow-hidden"
+            style={{
+              ["--a" as string]: 0,
+              ["--lift" as string]: 0,
+              ["--cards" as string]: 0,
+            }}
+          >
+            <h2
+              className="absolute left-1/2 top-1/2 grid w-full grid-cols-[1fr_auto_1fr] items-center"
+              style={{
+                transform:
+                  "translate(-50%, calc(-50% - var(--lift) * (41vh - 79px)))",
+              }}
+            >
+              <span className="sr-only">
+                {HEAD_LEFT[0]}
+                {HEAD_RIGHT[0]} {HEAD_LEFT[1]}
+                {HEAD_RIGHT[1]}
+              </span>
+              {/* Both blocks sit flush against the media in the flex row — no
+                  extra translate. All the movement comes from the video
+                  narrowing, which pulls the halves together and keeps the copy
+                  tight to the video edge the whole way (as in the reference,
+                  where the outer words are clipped by the viewport). At the
+                  widest video the halves sit entirely outside the viewport, so
+                  the opening frame shows video only — no fade needed, the
+                  geometry does it. */}
+              <span
+                aria-hidden
+                className={`${headingClass} flex min-w-0 flex-col items-end text-right`}
+              >
+                {HEAD_LEFT.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </span>
 
-        {/* Three columns on desktop: the illustration sits in its own middle
-            column so it never covers the card copy, which also keeps the two
-            cards narrower. Both cards stretch to equal height. */}
-        <div className="mt-14 grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(180px,260px)_minmax(0,1fr)] lg:gap-6">
-          <Card
-            watermark="UNIVERSITY"
-            title="University Advantage"
-            tagline="Gives you the foundation"
-            items={UNIVERSITY}
-            dark={false}
-          />
+              {/* Media narrows horizontally only — it keeps full height right
+                  down to a sliver, as in the reference. The outer span carries
+                  the animated WIDTH but zero height, so the headline row is
+                  only as tall as the text and still centres (and later lifts)
+                  correctly; the video itself is absolutely positioned and
+                  vertically centred inside it. */}
+              <span
+                aria-hidden
+                className="relative block h-0 shrink-0"
+                style={{
+                  width: "calc((1 - var(--a)) * 62vw)",
+                  marginInline: "calc((1 - var(--a)) * 12px)",
+                }}
+              >
+                <span className="absolute left-0 top-1/2 block w-full -translate-y-1/2 overflow-hidden rounded-2xl bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)] [height:min(68vh,620px)]">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    className="size-full object-cover"
+                  >
+                    <source src={`${HERO_VIDEO}.webm`} type="video/webm" />
+                    <source src={`${HERO_VIDEO}.mp4`} type="video/mp4" />
+                  </video>
+                </span>
+              </span>
 
-          <div className="order-last flex items-center justify-center lg:order-none">
-            <Image
-              src="/images/advantage/center-illustration.png"
-              alt="University and Silicon Valley learning combined"
-              width={378}
-              height={377}
-              className="h-auto w-[220px] select-none lg:w-full"
-            />
+              <span aria-hidden className={`${headingClass} flex min-w-0 flex-col items-start text-left`}>
+                {HEAD_RIGHT.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </span>
+            </h2>
+
+            {/* panels share the pinned frame, sliding up under the heading */}
+            <div
+              className="absolute inset-x-0"
+              style={{
+                top: "calc(9vh + 198px)",
+                opacity: "var(--cards)",
+                transform: "translateY(calc((1 - var(--cards)) * 36px))",
+              }}
+            >
+              <div className="container-page">
+                <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(150px,210px)_minmax(0,1fr)] lg:gap-5">
+                  <Panel
+                    watermark="UNIVERSITY"
+                    title="University Advantage"
+                    tagline="Gives you the foundation"
+                    items={UNIVERSITY}
+                    dark={false}
+                  />
+                  <div className="hidden items-center justify-center lg:flex">
+                    <Image
+                      src="/images/advantage/center-illustration.png"
+                      alt="University and Silicon Valley learning combined"
+                      width={378}
+                      height={377}
+                      className="h-auto w-full select-none"
+                    />
+                  </div>
+                  <Panel
+                    watermark="SILICON"
+                    title="Silicon Valley Style Learning"
+                    tagline="Helps you go further"
+                    items={SILICON}
+                    dark
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-
-          <Card
-            watermark="SILICON"
-            title="Silicon Valley Style Learning"
-            tagline="Helps you go further"
-            items={SILICON}
-            dark
-          />
         </div>
-      </div>
+      ) : (
+        <div className="container-page pt-20 lg:pt-28">
+          <h2 className="mx-auto max-w-3xl text-center font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.2] text-ink">
+            {HEAD_LEFT[0]}
+            {HEAD_RIGHT[0]} {HEAD_LEFT[1]}
+            {HEAD_RIGHT[1]}
+          </h2>
+        </div>
+      )}
     </section>
   );
 }

@@ -178,8 +178,8 @@ export function EcosystemCards() {
                   borderRadius: cq(c.radius),
                   borderTopWidth: cq(1),
                   borderLeftWidth: cq(1),
-                  borderRightWidth: cq(4),
-                  borderBottomWidth: cq(4),
+                  borderRightWidth: cq(4.5),
+                  borderBottomWidth: cq(4.5),
                 }}
               >
                 <div
