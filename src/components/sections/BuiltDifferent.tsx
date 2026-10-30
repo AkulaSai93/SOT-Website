@@ -2,7 +2,7 @@
  * "How We're Built Different" — reproduced from sot.upgrad.com, built from that
  * section's own class list and computed styles rather than by eye:
  *
- *   section    padding 80px at lg (px-4 py-16 / sm:px-6 py-20 / lg:p-20).
+ *   section    padding 64px vertical at lg (py-14 / sm:py-16 / lg:py-16).
  *              Rendered light per the site's light-theme brief: the source
  *              panel is black, so surfaces and text are mapped to this
  *              project's light tokens while sizes, spacing and the red
@@ -71,18 +71,18 @@ export function BuiltDifferent() {
     <section
       id="built-different"
       aria-labelledby="built-different-heading"
-      className="w-full bg-surface px-4 py-16 sm:px-6 sm:py-20 lg:p-20"
+      className="w-full bg-surface px-4 py-14 sm:px-6 sm:py-16 lg:px-20 lg:py-16"
     >
       <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-10 lg:gap-[60px]">
         <header className="mx-auto max-w-[609px] text-center text-ink">
           <h2
             id="built-different-heading"
-            className="font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.33] tracking-[-0.4px]"
+            className="font-display text-[clamp(1.625rem,2.8vw,2.5rem)] font-semibold leading-[1.33] tracking-[-0.4px]"
           >
             How{" "}
             <span style={{ color: PRIMARY }}>We&rsquo;re Built Different</span>
           </h2>
-          <p className="mt-5 text-base font-normal leading-normal text-body">
+          <p className="mt-5 font-display text-[clamp(0.9375rem,1.2vw,1rem)] font-normal leading-[1.6] text-muted">
             Designed to go beyond traditional education with hands-on learning,
             global exposure, industry integration, and career-focused outcomes.
           </p>

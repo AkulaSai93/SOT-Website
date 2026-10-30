@@ -5,6 +5,8 @@ import { Legacy } from "@/components/sections/Legacy";
 import { BestOfBoth } from "@/components/sections/BestOfBoth";
 import { BuiltDifferent } from "@/components/sections/BuiltDifferent";
 import { Specializations } from "@/components/sections/Specializations";
+import { Curriculum } from "@/components/sections/Curriculum";
+import { Pathways } from "@/components/sections/Pathways";
 
 export default function Home() {
   return (
@@ -17,6 +19,8 @@ export default function Home() {
         <BestOfBoth />
         <BuiltDifferent />
         <Specializations />
+        <Curriculum />
+        <Pathways />
       </main>
     </>
   );

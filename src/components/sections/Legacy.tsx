@@ -26,9 +26,9 @@ const STATS = [
 export function Legacy() {
   return (
     <section id="legacy" className="bg-white">
-      <div className="mx-auto flex max-w-[1280px] flex-col items-center gap-[60px] px-6 pb-[120px] pt-[100px]">
+      <div className="mx-auto flex max-w-[1280px] flex-col items-center gap-12 px-6 pb-16 pt-16">
         <div className="flex flex-col items-center gap-6 text-center">
-          <h2 className="font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-[#0b0d12]">
+          <h2 className="font-display text-[clamp(1.625rem,2.8vw,2.5rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-[#0b0d12]">
             Backed by{" "}
             <span className="font-medium text-[#e6161f]">
               upGrad&rsquo;s Learning Ecosystem
@@ -36,7 +36,7 @@ export function Legacy() {
           </h2>
 
           {/* One line at every width: 17px down to ~1090px, then viewport-scaled. */}
-          <p className="whitespace-nowrap font-display text-[min(1.0625rem,1.55vw)] font-normal leading-[1.6] text-muted">
+          <p className="whitespace-nowrap font-display text-[min(1rem,1.55vw)] font-normal leading-[1.6] text-muted">
             A legacy of 10+ years in higher education, driving learning, hiring,
             and career success
           </p>

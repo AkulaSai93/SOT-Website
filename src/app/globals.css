@@ -50,8 +50,8 @@
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
-  --font-sans: var(--font-montserrat);
-  --font-display: var(--font-montserrat);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-jakarta);
 }
 
 /* Base styles live in @layer base so Tailwind utilities (text-white, text-ink,
@@ -84,7 +84,7 @@
    apply in this Tailwind v4 + turbopack setup (the same reason heading colours
    had to move out of it), so the font would silently fall back to system-ui. */
 html {
-  font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Reusable primitives ---------------------------------------- */

@@ -106,21 +106,23 @@ const clamp = (v: number, lo: number, hi: number) =>
 
 function Rows({ items, dark }: { items: Item[]; dark: boolean }) {
   return (
-    <ul className="relative mt-4 flex flex-1 flex-col">
+    <ul className="mt-5 flex flex-1 flex-col">
       {items.map((item, i) => (
         <li
           key={item.title}
-          className={`flex flex-1 items-start gap-3 py-2.5 ${
+          className={`group -mx-2 flex flex-1 items-center gap-4 rounded-2xl px-2 py-2 transition-colors duration-300 ${
+            dark ? "hover:bg-white/[0.08]" : "hover:bg-black/[0.03]"
+          } ${
             i > 0
               ? dark
-                ? "border-t border-white/15"
-                : "border-t border-line"
+                ? "border-t border-white/[0.14]"
+                : "border-t border-black/[0.06]"
               : ""
           }`}
         >
           <span
-            className={`grid size-9 shrink-0 place-items-center rounded-lg ${
-              dark ? "bg-white/15" : "bg-sunken"
+            className={`grid size-11 shrink-0 place-items-center rounded-[14px] transition-transform duration-300 group-hover:scale-105 ${
+              dark ? "bg-white/15" : "bg-[#f3f4f6]"
             }`}
           >
             <Image
@@ -128,31 +130,36 @@ function Rows({ items, dark }: { items: Item[]; dark: boolean }) {
               alt=""
               width={24}
               height={24}
-              className={`size-5 object-contain ${dark ? "brightness-0 invert" : ""}`}
+              className={`size-[22px] object-contain ${dark ? "brightness-0 invert" : ""}`}
             />
           </span>
-          <div className="min-w-0">
-            <h4
-              className={`font-display text-[14px] font-semibold leading-snug ${
-                dark ? "text-white" : "text-ink"
+          <span className="min-w-0">
+            <span
+              className={`block text-[15px] font-semibold leading-snug ${
+                dark ? "text-white" : "text-[#0a0a0b]"
               }`}
             >
               {item.title}
-            </h4>
-            <p
-              className={`mt-0.5 text-[12.5px] leading-snug ${
-                dark ? "text-white/85" : "text-body"
+            </span>
+            <span
+              className={`mt-0.5 block text-[14px] leading-snug ${
+                dark ? "text-white/85" : "text-[#444]"
               }`}
             >
               {item.body}
-            </p>
-          </div>
+            </span>
+          </span>
         </li>
       ))}
     </ul>
   );
 }
 
+/* Card styling follows the "Your College / uGSOT Catalyst" pair on
+   sot.upgrad.com/catalyst: 28px radius, hairline ring + long soft drop
+   shadow, a huge ghost wordmark behind the title, and on the red card a
+   147deg gradient with an oversized chevron. Vertical padding is tighter than
+   the reference so both cards fit the pinned frame under the heading. */
 function Panel({
   watermark,
   title,
@@ -168,44 +175,61 @@ function Panel({
 }) {
   return (
     <div
-      className={`relative flex h-full flex-col overflow-hidden rounded-[24px] p-5 lg:p-6 ${
+      className={`relative isolate flex h-full flex-col overflow-hidden rounded-xl px-8 pb-6 pt-[68px] ${
         dark
-          ? "bg-accent"
-          : "border border-line bg-surface shadow-[var(--shadow-md)]"
+          ? ""
+          : "border border-black/[0.08] bg-white"
       }`}
+      style={
+        dark
+          ? {
+              backgroundImage:
+                "linear-gradient(147deg, #ee1a24 0%, #e6161f 40%, #b90c14 100%)",
+            }
+          : undefined
+      }
     >
-      {/* oversized ghost wordmark, clipped by the panel */}
+      {dark && (
+        <svg
+          aria-hidden
+          viewBox="0 0 100 200"
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full text-white/[0.07]"
+          fill="currentColor"
+        >
+          <path d="M0 0h38l62 100-62 100H0l62-100z" />
+        </svg>
+      )}
+
+      {/* oversized ghost wordmark, clipped by the card */}
       <span
         aria-hidden
-        className={`pointer-events-none absolute -top-4 left-6 select-none font-display text-[58px] font-extrabold leading-none tracking-tight lg:text-[66px] ${
-          dark ? "text-white/15" : "text-ink/[0.055]"
+        className={`pointer-events-none absolute left-7 top-3 -z-10 select-none whitespace-nowrap font-display text-[clamp(3rem,4.4vw,4rem)] font-extrabold leading-[0.8] tracking-[-0.04em] ${
+          dark ? "text-white/[0.14]" : "text-black/[0.07]"
         }`}
       >
         {watermark}
       </span>
 
-      <div className="relative flex flex-1 flex-col">
-        <h3
-          className={`font-display text-[16px] font-bold uppercase tracking-tight lg:text-[18px] ${
-            dark ? "text-white" : "text-ink"
-          }`}
-        >
-          {title}
-        </h3>
-        <span
-          aria-hidden
-          className={`mt-2 block h-[3px] w-12 rounded-full ${
-            dark ? "bg-white" : "bg-accent"
-          }`}
-        />
-        <p
-          className={`mt-2 text-[13px] ${dark ? "text-white/85" : "text-body"}`}
-        >
-          {tagline}
-        </p>
+      <h3
+        className={`font-display text-[clamp(1rem,1.4vw,1.25rem)] font-extrabold uppercase leading-tight ${
+          dark ? "text-white" : "text-[#0a0a0b]"
+        }`}
+      >
+        {title}
+      </h3>
+      <span
+        aria-hidden
+        className={`mt-3 block h-[3px] w-11 rounded-full ${
+          dark ? "bg-white/55" : "bg-[#e6161f]"
+        }`}
+      />
+      <p
+        className={`mt-3 text-[15px] ${dark ? "text-white/80" : "text-[#444]"}`}
+      >
+        {tagline}
+      </p>
 
-        <Rows items={items} dark={dark} />
-      </div>
+      <Rows items={items} dark={dark} />
     </div>
   );
 }
@@ -294,7 +318,7 @@ export function BestOfBoth() {
     // Two lines rather than one, so the converged block is far narrower and
     // the type can be much larger: 5.2vw still clears a 48px gutter at 1024,
     // 1280 and 1440.
-    "font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-ink whitespace-nowrap";
+    "font-display text-[clamp(1.625rem,2.8vw,2.5rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-ink whitespace-nowrap";
 
   return (
     <section id="best-of-both" className="bg-white">
@@ -313,7 +337,7 @@ export function BestOfBoth() {
               className="absolute left-1/2 top-1/2 grid w-full grid-cols-[1fr_auto_1fr] items-center"
               style={{
                 transform:
-                  "translate(-50%, calc(-50% - var(--lift) * (41vh - 59px)))",
+                  "translate(-50%, calc(-50% - var(--lift) * (41vh - 53px)))",
               }}
             >
               <span className="sr-only">
@@ -395,13 +419,13 @@ export function BestOfBoth() {
             <div
               className="absolute inset-x-0"
               style={{
-                top: "calc(9vh + 198px)",
+                top: "calc(9vh + 140px)",
                 opacity: "var(--cards)",
                 transform: "translateY(calc((1 - var(--cards)) * 36px))",
               }}
             >
               <div className="container-page">
-                <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(150px,210px)_minmax(0,1fr)] lg:gap-5">
+                <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(150px,230px)_minmax(0,1fr)] lg:gap-4">
                   <Panel
                     watermark="UNIVERSITY"
                     title="University Advantage"
@@ -431,8 +455,8 @@ export function BestOfBoth() {
           </div>
         </div>
       ) : (
-        <div className="container-page pt-20 lg:pt-28">
-          <h2 className="mx-auto max-w-3xl text-center font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-ink">
+        <div className="container-page pt-14 lg:pt-16">
+          <h2 className="mx-auto max-w-3xl text-center font-display text-[clamp(1.625rem,2.8vw,2.5rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-ink">
             {HEAD_LEFT[0]}
             {HEAD_RIGHT[0]} Meets{" "}
             <span className="text-[#e6161f]">
