@@ -101,6 +101,29 @@ const SILICON: Item[] = [
   },
 ];
 
+/**
+ * Centre art: student cut-out with "University Advantage" and "Silicon Valley
+ * Style Learning" lettered either side, after the "Same College / Bigger
+ * Future" art on sot.upgrad.com/catalyst. Supplied as one transparent image.
+ */
+function CentreStudent() {
+  return (
+    <Image
+      src="/images/advantage/student-both.webp"
+      alt="A student with both the University Advantage and Silicon Valley Style Learning"
+      width={1179}
+      height={1334}
+      sizes="300px"
+      className="h-auto w-full select-none"
+      // fade the cropped bottom edge out into the page background
+      style={{
+        maskImage: "linear-gradient(to bottom, #000 72%, transparent 100%)",
+        WebkitMaskImage: "linear-gradient(to bottom, #000 72%, transparent 100%)",
+      }}
+    />
+  );
+}
+
 const clamp = (v: number, lo: number, hi: number) =>
   Math.min(hi, Math.max(lo, v));
 
@@ -425,7 +448,7 @@ export function BestOfBoth() {
               }}
             >
               <div className="container-page">
-                <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(150px,230px)_minmax(0,1fr)] lg:gap-4">
+                <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(200px,300px)_minmax(0,1fr)] lg:gap-3">
                   <Panel
                     watermark="UNIVERSITY"
                     title="University Advantage"
@@ -433,14 +456,9 @@ export function BestOfBoth() {
                     items={UNIVERSITY}
                     dark={false}
                   />
-                  <div className="hidden items-center justify-center lg:flex">
-                    <Image
-                      src="/images/advantage/center-illustration.png"
-                      alt="University and Silicon Valley learning combined"
-                      width={378}
-                      height={377}
-                      className="h-auto w-full select-none"
-                    />
+                  {/* sits on the cards' baseline, as on sot.upgrad.com/catalyst */}
+                  <div className="hidden items-end justify-center lg:flex">
+                    <CentreStudent />
                   </div>
                   <Panel
                     watermark="SILICON"

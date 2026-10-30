@@ -5,7 +5,7 @@ import { EcosystemCards } from "@/components/site/EcosystemCards";
  * node 98:9430.
  *
  *   section    bg white
- *   container  max-w-[1280px], px-24, pt-100 pb-120, flex-col gap-60 centred
+ *   container  shared .container-page gutter, pt-64 pb-64, flex-col gap-48 centred
  *   heading    44px / 600 / lh 58.52 / tracking -0.4px, #0b0d12,
  *              with "upGrad's Learning Ecosystem" at weight 500 in #e6161f
  *   sub        24px / 400 / lh 36, #3d4452
@@ -26,7 +26,7 @@ const STATS = [
 export function Legacy() {
   return (
     <section id="legacy" className="bg-white">
-      <div className="mx-auto flex max-w-[1280px] flex-col items-center gap-12 px-6 pb-16 pt-16">
+      <div className="container-page flex flex-col items-center gap-12 pb-16 pt-16">
         <div className="flex flex-col items-center gap-6 text-center">
           <h2 className="font-display text-[clamp(1.625rem,2.8vw,2.5rem)] font-semibold leading-[1.33] tracking-[-0.4px] text-[#0b0d12]">
             Backed by{" "}

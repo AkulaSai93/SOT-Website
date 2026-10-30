@@ -146,7 +146,8 @@ function Card({ path }: { path: (typeof PATHS)[number] }) {
 /** Closing call to action, part of the pinned frame (sot.upgrad.com copy) */
 function PathwayCta() {
   return (
-    <div className="mx-auto flex max-w-[1000px] flex-col items-center gap-5 border-t border-black/10 px-6 pt-5 text-center md:flex-row md:justify-between md:text-left">
+    <div className="container-page">
+    <div className="flex flex-col items-center gap-5 border-t border-black/10 pt-5 text-center md:flex-row md:justify-between md:text-left">
       <div>
         <h3 className="text-[20px] font-semibold leading-tight text-ink">
           Ready to choose your <span className="text-[#e6161f]">pathway?</span>
@@ -166,6 +167,7 @@ function PathwayCta() {
           <path d="M3 8h10M9 4l4 4-4 4" />
         </svg>
       </GlowButton>
+    </div>
     </div>
   );
 }

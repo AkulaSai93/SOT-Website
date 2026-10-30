@@ -7,7 +7,7 @@
  *              panel is black, so surfaces and text are mapped to this
  *              project's light tokens while sizes, spacing and the red
  *              accent stay exactly as measured.
- *   container  max-w-[1500px], flex-col, gap-10 -> lg:gap-[60px]
+ *   container  shared .container-page gutter, flex-col, gap-10 -> lg:gap-[60px]
  *   header     max-w-[609px], centred; h2 32/36/40px, 600, lh 60px,
  *              "How " white + "We're Built Different" in --primary red
  *   intro      16px / 400 / lh 24px, white, mt-20px
@@ -71,9 +71,9 @@ export function BuiltDifferent() {
     <section
       id="built-different"
       aria-labelledby="built-different-heading"
-      className="w-full bg-surface px-4 py-14 sm:px-6 sm:py-16 lg:px-20 lg:py-16"
+      className="w-full bg-surface py-14 sm:py-16"
     >
-      <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-10 lg:gap-[60px]">
+      <div className="container-page flex flex-col gap-10 lg:gap-[60px]">
         <header className="mx-auto max-w-[609px] text-center text-ink">
           <h2
             id="built-different-heading"
